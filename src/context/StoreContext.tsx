@@ -299,16 +299,23 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Track Order
   const trackOrder = async (orderId: string, phone: string): Promise<Order> => {
-    const res = await fetch('/api/orders/track', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orderId, phone }),
-    });
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error || "Order not found");
+    try {
+      const res = await fetch('/api/orders/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId, phone }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: "Order not found" }));
+        throw new Error(err.error || "Order not found");
+      }
+      return await res.json();
+    } catch (e: any) {
+      // Local fallback for static site / GitHub Pages
+      const found = orders.find(o => o.id.toUpperCase() === orderId.trim().toUpperCase() && o.phone === phone.trim());
+      if (found) return found;
+      throw new Error(e?.message || "Order not found");
     }
-    return await res.json();
   };
 
   // Admin Auth
