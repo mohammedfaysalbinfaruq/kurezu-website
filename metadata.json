@@ -1,0 +1,6 @@
+{
+  "name": "KUREZU — Premium Die-Cast Cars",
+  "description": "Bangladesh-based premium die-cast model car store for collectors and automotive enthusiasts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
